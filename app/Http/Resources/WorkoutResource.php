@@ -2,9 +2,10 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Exercise;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ExerciseResource extends JsonResource
+class WorkoutResource extends JsonResource
 {
   /**
    * Transform the resource into an array.
@@ -14,13 +15,10 @@ class ExerciseResource extends JsonResource
    */
   public function toArray($request)
   {
+    $exercise = Exercise::where('id', $this->exercise_id)->first();
     return [
-      'id' => $this->id,
-      'title' => $this->title,
-      'type' => $this->type,
-      'reps' => $this->whenNotNull($this->reps),
-      'weights_in_kg' => $this->whenNotNull($this->weights_in_kg),
-      'durations_in_sec' => $this->whenNotNull($this->durations_in_sec),
+      'exercise' => new ExerciseResource($exercise),
+      'sets' => $this->sets
     ];
   }
 }

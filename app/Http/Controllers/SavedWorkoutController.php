@@ -20,15 +20,11 @@ class SavedWorkoutController extends Controller
     $title = $request->input('title');
     $user_id = $request->input('user_id');
     $public_workout_id = $request->input('public_workout_id');
-    $exercises_id = $request->input('exercises');
-    $exercises = collect();
-    foreach ($exercises_id as $id) {
-      $exercises->push(Exercise::where('id', $id));
-    }
+    $exercises = json_encode($request->input('exercises'));
 
     $model = null;
 
-    if ($public_workout_id != null && $exercises_id != null) {
+    if ($public_workout_id != null && $exercises != null) {
       return response('Public workout id and exercises cannot exist at the same time.', 400);
     }
 
@@ -49,9 +45,9 @@ class SavedWorkoutController extends Controller
     return response(new SavedWorkoutResource($model));
   }
 
-  public function show(SavedWorkout $savedWorkout)
+  public function show(SavedWorkout $saved_workout)
   {
-    //
+    return response(new SavedWorkoutResource($saved_workout));
   }
 
   public function update(Request $request, SavedWorkout $savedWorkout)

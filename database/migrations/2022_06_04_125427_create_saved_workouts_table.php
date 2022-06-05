@@ -24,7 +24,7 @@ return new class extends Migration
         ->references('id')
         ->on('public_workouts')
         ->cascadeOnDelete(); */
-      $table->json('exercise');
+      $table->json('exercises');
       $table->timestamps();
     });
   }

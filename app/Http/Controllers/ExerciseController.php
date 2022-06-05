@@ -44,7 +44,6 @@ class ExerciseController extends Controller
     $reps = $request->input('reps');
     $weights_in_kg = $request->input('weights_in_kg');
     $durations_in_sec = $request->input('durations_in_sec');
-    $rest = $request->input('rest');
 
     $model = null;
 
@@ -59,7 +58,6 @@ class ExerciseController extends Controller
         'title' => $title,
         'type' => $type,
         'reps' => $reps,
-        'rest' => $rest
       ]);
     }
 
@@ -70,7 +68,6 @@ class ExerciseController extends Controller
         'type' => $type,
         'reps' => $reps,
         'weights_in_kg' => $weights_in_kg,
-        'rest' => $rest
       ]);
     }
 
@@ -80,7 +77,6 @@ class ExerciseController extends Controller
         'title' => $title,
         'type' => $type,
         'durations_in_sec' => $durations_in_sec,
-        'rest' => $rest
       ]);
     }
 
@@ -105,7 +101,6 @@ class ExerciseController extends Controller
     $durations_in_sec = $type == 2
       ? $request->input('durations_in_sec') ?? $exercise->duration_in_sec
       : null;
-    $rest = $request->input('rest');
 
     $constraints_violation = $this->exercise_constraints_checker($type, $reps, $weights_in_kg, $durations_in_sec);
     if ($constraints_violation != null) {
@@ -118,7 +113,6 @@ class ExerciseController extends Controller
       'reps' => $reps,
       'weights_in_kg' => $weights_in_kg,
       'durations_in_sec' => $durations_in_sec,
-      'rest' => $rest,
     ]);
 
     return response($exercise->toJson());

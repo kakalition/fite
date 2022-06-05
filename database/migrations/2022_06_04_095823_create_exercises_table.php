@@ -20,7 +20,6 @@ return new class extends Migration
       $table->integer('reps')->nullable();
       $table->integer('weights_in_kg')->nullable();
       $table->integer('durations_in_sec')->nullable();
-      $table->integer('rest')->nullable();
       $table->timestamps();
     });
   }
