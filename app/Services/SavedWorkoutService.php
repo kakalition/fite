@@ -51,4 +51,17 @@ class SavedWorkoutService
       'data' => $model,
     ];
   }
+
+  public function find_workout(User $user, $slug)
+  {
+    $modifiedParam = str_replace('-', ' ', $slug);
+    $workout = $user
+      ->saved_workouts
+      ->filter(function ($value) use ($modifiedParam) {
+        return strtolower($value->title) == $modifiedParam;
+      })
+      ->first();
+
+    return $workout;
+  }
 }

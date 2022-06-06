@@ -40,19 +40,15 @@ class SavedWorkoutController extends Controller
 
   public function show(User $user, $saved_workout)
   {
-    $modifiedParam = str_replace('-', ' ', $saved_workout);
-    $workout = $user
-      ->saved_workouts
-      ->filter(function ($value, $key) use ($modifiedParam) {
-        return strtolower($value->title) == $modifiedParam;
-      })
-      ->first();
+    $result = $this
+      ->saved_workout_service
+      ->find_workout($user, $saved_workout);
 
-    if ($workout == null) {
+    if ($result == null) {
       return response('Not found', 404);
     }
 
-    return response(new SavedWorkoutResource($workout));
+    return response(new SavedWorkoutResource($result));
   }
 
   public function update(Request $request, SavedWorkout $savedWorkout)
