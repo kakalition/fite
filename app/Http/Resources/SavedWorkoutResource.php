@@ -16,11 +16,15 @@ class SavedWorkoutResource extends JsonResource
   public function toArray($request)
   {
     $exercises = array_map(function ($item) {
-      $exercise = Exercise::where('id', $item->exercise_id)->first();
-      return [
-        'exercise' => new ExerciseResource($exercise),
-        'sets' => $item->sets
-      ];
+      $exercise = new ExerciseResource(
+        Exercise::where('id', $item->exercise_id)->first()
+      );
+
+      $return_value = $exercise->toArray(null);
+      $return_value += array('sets' =>  $item->sets);
+      $return_value += array('rest_per_set' =>  $item->rest_per_set);
+
+      return $return_value;
     }, json_decode($this->exercises));
 
     return [

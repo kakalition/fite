@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Resources\SavedWorkoutResource;
 use App\Models\Exercise;
 use App\Models\SavedWorkout;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SavedWorkoutController extends Controller
 {
@@ -45,9 +47,21 @@ class SavedWorkoutController extends Controller
     return response(new SavedWorkoutResource($model));
   }
 
-  public function show(SavedWorkout $saved_workout)
+  public function show(User $user, $saved_workout)
   {
-    return response(new SavedWorkoutResource($saved_workout));
+    $modifiedParam = str_replace('-', ' ', $saved_workout);
+    $workout = $user
+      ->saved_workouts
+      ->filter(function ($value, $key) use ($modifiedParam) {
+        return strtolower($value->title) == $modifiedParam;
+      })
+      ->first();
+
+    if ($workout == null) {
+      return response('Not found', 404);
+    }
+
+    return response(new SavedWorkoutResource($workout));
   }
 
   public function update(Request $request, SavedWorkout $savedWorkout)
@@ -55,8 +69,9 @@ class SavedWorkoutController extends Controller
     //
   }
 
-  public function destroy(SavedWorkout $savedWorkout)
+  public function destroy(SavedWorkout $saved_workout)
   {
-    //
+    $saved_workout->delete();
+    return response('', 204);
   }
 }

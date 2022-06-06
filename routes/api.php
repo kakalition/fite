@@ -22,5 +22,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::apiResources([
   'exercises' => ExerciseController::class,
-  'saved-workouts' => SavedWorkoutController::class
+  'users/{user}/saved-workouts' => SavedWorkoutController::class
 ]);
