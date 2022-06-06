@@ -28,6 +28,7 @@ class ExerciseController extends Controller
 
     return null;
   }
+
   public function index()
   {
     $exercises = ExerciseResource::collection(Exercise::all());
@@ -41,44 +42,11 @@ class ExerciseController extends Controller
   {
     $title = $request->input('title');
     $type = $request->input('type');
-    $reps = $request->input('reps');
-    $weights_in_kg = $request->input('weights_in_kg');
-    $durations_in_sec = $request->input('durations_in_sec');
 
-    $model = null;
-
-    $constraints_violation = $this->exercise_constraints_checker($type, $reps, $weights_in_kg, $durations_in_sec);
-    if ($constraints_violation != null) {
-      return $constraints_violation;
-    }
-
-    // Bodyweight Training
-    if ($type === 0) {
-      $model = Exercise::create([
-        'title' => $title,
-        'type' => $type,
-        'reps' => $reps,
-      ]);
-    }
-
-    // Weight Training
-    else if ($type === 1) {
-      $model = Exercise::create([
-        'title' => $title,
-        'type' => $type,
-        'reps' => $reps,
-        'weights_in_kg' => $weights_in_kg,
-      ]);
-    }
-
-    // Interval Training
-    else {
-      $model = Exercise::create([
-        'title' => $title,
-        'type' => $type,
-        'durations_in_sec' => $durations_in_sec,
-      ]);
-    }
+    $model = Exercise::create([
+      'title' => $title,
+      'type' => $type,
+    ]);
 
     return response($model->toJson(), 201);
   }
