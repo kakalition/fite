@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\SavedWorkoutResource;
-use App\Models\SavedWorkout;
 use App\Models\User;
 use App\Services\SavedWorkoutService;
 use Illuminate\Http\Request;
