@@ -14,7 +14,7 @@ class SavedWorkoutController extends Controller
   public function index()
   {
     $saved_workouts = SavedWorkoutResource::collection(SavedWorkout::all());
-    return response(SavedWorkout::all());
+    return response($saved_workouts);
   }
 
   /* Exercises JSON Format
