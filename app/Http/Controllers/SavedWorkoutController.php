@@ -56,9 +56,16 @@ class SavedWorkoutController extends Controller
     //
   }
 
-  public function destroy(SavedWorkout $saved_workout)
+  public function destroy(User $user, $saved_workout)
   {
-    $saved_workout->delete();
+    $delete_status = $this
+      ->saved_workout_service
+      ->delete_workout($user, $saved_workout);
+
+    if ($delete_status != true) {
+      return response('Workout not found.', 404);
+    }
+
     return response('', 204);
   }
 }

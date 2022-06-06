@@ -54,14 +54,23 @@ class SavedWorkoutService
 
   public function find_workout(User $user, $slug)
   {
-    $modifiedParam = str_replace('-', ' ', $slug);
+    $modified_slug = str_replace('-', ' ', $slug);
     $workout = $user
       ->saved_workouts
-      ->filter(function ($value) use ($modifiedParam) {
-        return strtolower($value->title) == $modifiedParam;
+      ->filter(function ($value) use ($modified_slug) {
+        return strtolower($value->title) == $modified_slug;
       })
       ->first();
 
     return $workout;
+  }
+
+  public function delete_workout(User $user, $slug)
+  {
+    $workout = $this->find_workout($user, $slug);
+    if ($workout != null) {
+      $workout->delete();
+      return true;
+    } else return false;
   }
 }
