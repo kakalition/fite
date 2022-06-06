@@ -109,4 +109,32 @@ class SavedWorkoutValidator
 
     return null;
   }
+
+  public function partial_validate(Request $request, $user_id)
+  {
+    if ($request->input('title') != null) {
+      $existing_title_validation = $this->validate_title(
+        $user_id,
+        $request->input('title'),
+      );
+
+      if ($existing_title_validation != null) {
+        return $existing_title_validation;
+      }
+    }
+
+    if ($request->input('exercises') != null) {
+      $exercise_validation = null;
+      foreach ($request->input('exercises') as $exercise) {
+        $exercise_validation = $this->validate_exercise($exercise);
+        if ($exercise_validation != null) break;
+      }
+
+      if ($exercise_validation != null) {
+        return $exercise_validation;
+      }
+    }
+
+    return null;
+  }
 }

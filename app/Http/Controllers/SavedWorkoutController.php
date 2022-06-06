@@ -51,9 +51,17 @@ class SavedWorkoutController extends Controller
     return response(new SavedWorkoutResource($result));
   }
 
-  public function update(Request $request, SavedWorkout $savedWorkout)
+  public function update(Request $request, User $user, $saved_workout)
   {
-    //
+    $update_status = $this
+      ->saved_workout_service
+      ->update_workout($request, $user, $saved_workout);
+
+    if ($update_status['status'] == 200) {
+      return response(new SavedWorkoutResource($update_status['data']));
+    } else {
+      return $update_status['data'];
+    }
   }
 
   public function destroy(User $user, $saved_workout)

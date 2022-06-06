@@ -52,6 +52,30 @@ class SavedWorkoutService
     ];
   }
 
+  public function update_workout(Request $request, User $user, $slug)
+  {
+    $validator = new SavedWorkoutValidator();
+    $validation_status = $validator->partial_validate($request, $user->id);
+
+    if ($validation_status != null) {
+      return [
+        'status' => 400,
+        'data' => $validation_status,
+      ];
+    }
+
+    $workout = $this->find_workout($user, $slug);
+    $workout->update([
+      'title' => $request->input('title') ?? $workout->title,
+      'exercises' => $request->input('exercises') ?? $workout->exercises,
+    ]);
+
+    return [
+      'status' => 200,
+      'data' => $workout,
+    ];
+  }
+
   public function find_workout(User $user, $slug)
   {
     $modified_slug = str_replace('-', ' ', $slug);
