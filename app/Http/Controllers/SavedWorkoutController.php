@@ -5,52 +5,37 @@ namespace App\Http\Controllers;
 use App\Http\Resources\SavedWorkoutResource;
 use App\Models\SavedWorkout;
 use App\Models\User;
+use App\Services\SavedWorkoutService;
 use Illuminate\Http\Request;
-use App\Validator\SavedWorkoutValidator;
 
 class SavedWorkoutController extends Controller
 {
+  protected $saved_workout_service;
 
-  public function index()
+  public function __construct(SavedWorkoutService $saved_workout_service)
   {
-    $saved_workouts = SavedWorkoutResource::collection(SavedWorkout::all());
+    $this->saved_workout_service = $saved_workout_service;
+  }
+
+  public function index(User $user)
+  {
+    $saved_workouts = $this
+      ->saved_workout_service
+      ->get_saved_workouts($user);
     return response($saved_workouts);
   }
 
-  /* Exercises JSON Format
-   * {
-   *   exercise_id,
-   *   reps,
-   *   rest,
-   * }
-   */
   public function store(Request $request)
   {
-    $validator = new SavedWorkoutValidator();
-    $validation_status = $validator->validate($request);
+    $save_status = $this
+      ->saved_workout_service
+      ->new_saved_workout($request);
 
-    if ($validation_status != null) {
-      return $validation_status;
-    }
-
-    $public_workout_id = $request->input('public_workout_id');
-    $model = null;
-
-    if ($public_workout_id != null) {
-      $model = SavedWorkout::create([
-        'user_id' => $request->input('user_id'),
-        'title' => $request->input('title'),
-        //'public_workout_id' => $public_workout_id,
-      ]);
+    if ($save_status['status'] == 200) {
+      return response(new SavedWorkoutResource($save_status['data']));
     } else {
-      $model = SavedWorkout::create([
-        'user_id' => $request->input('user_id'),
-        'title' => $request->input('title'),
-        'exercises' => json_encode($request->input('exercises')),
-      ]);
+      return $save_status['data'];
     }
-
-    return response(new SavedWorkoutResource($model));
   }
 
   public function show(User $user, $saved_workout)

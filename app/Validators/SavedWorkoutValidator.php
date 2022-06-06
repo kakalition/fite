@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Validator;
+namespace App\Validators;
 
 use App\Models\Exercise;
 use Illuminate\Http\Request;
@@ -18,25 +18,24 @@ class SavedWorkoutValidator
       ->first()
       ->type;
 
-
     if (
       $exercise_type == 0
-      && $is_reps_available ? $exercise['reps'] === null : false
+      && ($is_reps_available ? $exercise['reps'] == null : true)
     ) {
       return response('Bodyweight training should include repetitions.', 400);
     }
 
     if (
       $exercise_type == 1
-      && ($is_reps_available ? $exercise['reps'] === null : false)
-      || ($is_weights_available ? $exercise['weights_in_kg'] === null : false)
+      && (($is_reps_available ? $exercise['reps'] == null : true)
+        || ($is_weights_available ? $exercise['weights_in_kg'] == null : true))
     ) {
       return response('Weight training should include repetitions and weights.', 400);
     }
 
     if (
       $exercise_type == 2
-      && $is_duration_available ? $exercise['durations_in_sec'] == null : false
+      && ($is_duration_available ? $exercise['durations_in_sec'] == null : true)
     ) {
       return response('Interval training should include durations.', 400);
     }

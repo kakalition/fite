@@ -15,23 +15,19 @@ class SavedWorkoutResource extends JsonResource
    */
   public function toArray($request)
   {
-
-    //dd(json_decode($this->exercises)['0']->reps);
     $exercises = array_map(function ($item) {
-      //dd($item->reps);
       $exercise = new ExerciseResource(
         Exercise::where('id', $item->exercise_id)->first()
       );
 
       $return_value = $exercise->toArray(null);
-
       if ($exercise->type == 0) {
-        $return_value += array('reps' =>  $item->reps);
+        $return_value += array('reps' => $item->reps);
       } else if ($exercise->type == 1) {
-        $return_value += array('reps' =>  $item->reps);
-        $return_value += array('weights_in_kg' =>  $item->weights_in_kg);
+        $return_value += array('reps' => $item->reps);
+        $return_value += array('weights_in_kg' => $item->weights_in_kg);
       } else {
-        $return_value += array('duration_in_sec' =>  $item->duration_in_sec);
+        $return_value += array('duration_in_sec' => $item->duration_in_sec);
       }
 
       $return_value += array('rest' =>  $item->rest);
