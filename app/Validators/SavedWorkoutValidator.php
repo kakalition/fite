@@ -3,10 +3,27 @@
 namespace App\Validators;
 
 use App\Models\Exercise;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class SavedWorkoutValidator
 {
+
+  private function validate_title($user_id, $title)
+  {
+    $existing_titles = User::where('id', $user_id)
+      ->first()
+      ->saved_workouts
+      ->filter(function ($value) use ($title) {
+        return strtolower($value->title) == strtolower($title);
+      });
+
+    if ($existing_titles->count() > 0) {
+      return response('Title already exists.', 400);
+    }
+
+    return null;
+  }
 
   private function validate_exercise($exercise)
   {
@@ -62,6 +79,15 @@ class SavedWorkoutValidator
 
   public function validate(Request $request)
   {
+    $existing_title_validation = $this->validate_title(
+      $request->input('user_id'),
+      $request->input('title'),
+    );
+
+    if ($existing_title_validation != null) {
+      return $existing_title_validation;
+    }
+
     $exclusivity_validation = $this->validate_exclusivity(
       $request->input('public_workout_id'),
       $request->input('exercises'),
