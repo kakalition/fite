@@ -16,4 +16,18 @@ class HistoryService
 
     return $history;
   }
+
+  public function delete_history($user_id, $history_id)
+  {
+    History::where('user_id', $user_id)
+      ->where('id', $history_id)
+      ->delete();
+  }
+
+  public function delete_histories($user_id)
+  {
+    History::where('user_id', $user_id)
+      ->delete();
+    return response('', 204);
+  }
 }

@@ -49,8 +49,15 @@ class HistoryController extends Controller
     //
   }
 
-  public function destroy(History $history)
+  public function destroy($user_id, $history_id)
   {
-    //
+    $this->service->delete_history($user_id, $history_id);
+    return response('', 204);
+  }
+
+  public function destroy_all($user_id)
+  {
+    $this->service->delete_histories($user_id);
+    return response('', 204);
   }
 }

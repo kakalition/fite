@@ -26,3 +26,5 @@ Route::apiResources([
   'users/{user}/saved-workouts' => SavedWorkoutController::class,
   'users/{user}/histories' => HistoryController::class
 ]);
+
+Route::delete('users/{user}/histories', [HistoryController::class, 'destroy_all']);
