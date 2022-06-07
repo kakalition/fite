@@ -24,7 +24,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::apiResources([
   'exercises' => ExerciseController::class,
   'users/{user}/saved-workouts' => SavedWorkoutController::class,
-  'users/{user}/histories' => HistoryController::class
 ]);
+
+Route::apiResource('users/{user}/histories', HistoryController::class)
+  ->except('update');
 
 Route::delete('users/{user}/histories', [HistoryController::class, 'destroy_all']);

@@ -44,11 +44,6 @@ class HistoryController extends Controller
     return response($history_resource);
   }
 
-  public function update(Request $request, History $history)
-  {
-    //
-  }
-
   public function destroy($user_id, $history_id)
   {
     $this->service->delete_history($user_id, $history_id);
