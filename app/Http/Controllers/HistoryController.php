@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\DetailedHistoryResource;
 use App\Http\Resources\HistoryResource;
 use App\Models\History;
 use App\Models\User;
@@ -37,9 +38,10 @@ class HistoryController extends Controller
     return response($history);
   }
 
-  public function show(History $history)
+  public function show(User $user, History $history)
   {
-    //
+    $history_resource = new DetailedHistoryResource($history);
+    return response($history_resource);
   }
 
   public function update(Request $request, History $history)
