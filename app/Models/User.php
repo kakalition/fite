@@ -48,4 +48,8 @@ class User extends Authenticatable
   {
     return $this->hasMany(SavedWorkout::class, 'user_id');
   }
+
+  public function histories() {
+    return $this->hasMany(History::class, 'user_id');
+  }
 }

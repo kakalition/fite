@@ -2,63 +2,53 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\HistoryResource;
 use App\Models\History;
+use App\Models\User;
+use App\Services\HistoryService;
 use Illuminate\Http\Request;
 
 class HistoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
+  protected $service;
+
+  public function __construct(HistoryService $service)
+  {
+    $this->service = $service;
+  }
+
+  public function index(User $user)
+  {
+    $histories = $user
+      ->histories()
+      ->get();
+
+    if ($histories->isEmpty()) {
+      return response('Histories are empty', 200);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+    return response(HistoryResource::collection($histories));
+  }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\History  $history
-     * @return \Illuminate\Http\Response
-     */
-    public function show(History $history)
-    {
-        //
-    }
+  public function store(Request $request, $user_id)
+  {
+    $history = $this->service->create_history($request, $user_id);
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\History  $history
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, History $history)
-    {
-        //
-    }
+    return response($history);
+  }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\History  $history
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(History $history)
-    {
-        //
-    }
+  public function show(History $history)
+  {
+    //
+  }
+
+  public function update(Request $request, History $history)
+  {
+    //
+  }
+
+  public function destroy(History $history)
+  {
+    //
+  }
 }
