@@ -31,4 +31,5 @@ Route::apiResources([
 Route::apiResource('users/{user}/histories', HistoryController::class)
   ->except('update');
 
+Route::post('users/{user}/public-workouts/{public_workout}', [PublicWorkoutController::class, 'save_to_user']);
 Route::delete('users/{user}/histories', [HistoryController::class, 'destroy_all']);

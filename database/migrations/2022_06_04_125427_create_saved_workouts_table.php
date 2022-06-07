@@ -20,12 +20,24 @@ return new class extends Migration
         ->on('users')
         ->cascadeOnDelete();
       $table->string('title');
-      /*       $table->foreignId('public_workout_id')
+      $table->foreignId('public_workout_id')
+        ->nullable()
         ->references('id')
         ->on('public_workouts')
-        ->cascadeOnDelete(); */
-      $table->json('exercises');
+        ->cascadeOnDelete();
+      $table
+        ->json('exercises')
+        ->nullable()
+        ->constrained();
       $table->timestamps();
+    });
+
+    Schema::table('public_workouts', function (Blueprint $table) {
+      $table->foreignId('saved_workout_id')
+        ->references('id')
+        ->on('saved_workouts')
+        ->cascadeOnDelete()
+        ->after('id');
     });
   }
 

@@ -3,19 +3,15 @@
 namespace App\Http\Resources;
 
 use App\Models\Exercise;
+use App\Models\PublicWorkout;
+use App\Models\SavedWorkout;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class SavedWorkoutResource extends JsonResource
 {
-  /**
-   * Transform the resource into an array.
-   *
-   * @param  \Illuminate\Http\Request  $request
-   * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
-   */
-  public function toArray($request)
+  private function exercises_mapper($res)
   {
-    $exercises = array_map(function ($item) {
+    return array_map(function ($item) {
       $exercise = new ExerciseResource(
         Exercise::where('id', $item->exercise_id)->first()
       );
@@ -33,7 +29,25 @@ class SavedWorkoutResource extends JsonResource
       $return_value += array('rest' =>  $item->rest);
 
       return $return_value;
-    }, json_decode($this->exercises));
+    }, json_decode($res));
+  }
+
+  public function toArray($request)
+  {
+    $exercises = null;
+
+    if ($this->exercises != null) {
+      $exercises = $this->exercises_mapper($this->exercises);
+    } else {
+      $saved_id = PublicWorkout::where('id', $this->public_workout_id)
+        ->first()
+        ->saved_workout_id;
+      $saved_exercises = SavedWorkout::where('id', $saved_id)
+        ->first()
+        ->exercises;
+
+      $exercises = $this->exercises_mapper($saved_exercises);
+    }
 
     return [
       'id' => $this->id,

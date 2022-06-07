@@ -12,7 +12,7 @@ class SavedWorkout extends Model
   protected $fillable = [
     'user_id', 
     'title', 
-    //'public_workout_id', 
+    'public_workout_id', 
     'exercises'
   ];
 }

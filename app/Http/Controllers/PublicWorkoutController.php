@@ -52,4 +52,17 @@ class PublicWorkoutController extends Controller
   {
     //
   }
+
+  public function save_to_user($user_id, $public_workout_id)
+  {
+    $saved_workout = $this
+      ->service
+      ->save_to_user($user_id, $public_workout_id);
+
+    if ($saved_workout->status == ServiceStatus::Failed) {
+      return response($saved_workout->data, 400);
+    }
+
+    return response($saved_workout->data, 201);
+  }
 }

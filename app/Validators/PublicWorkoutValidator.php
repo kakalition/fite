@@ -3,6 +3,7 @@
 namespace App\Validators;
 
 use App\Models\PublicWorkout;
+use App\Models\SavedWorkout;
 use App\Validators\Validation\PublicWorkoutValidation;
 use App\Validators\Validation\ValidationStatus;
 use Illuminate\Http\Request;
@@ -25,6 +26,24 @@ class PublicWorkoutValidator
     return new PublicWorkoutValidation(
       ValidationStatus::Failed,
       'Duplicated value'
+    );
+  }
+
+  public function validate_user_saved_duplication($user_id, $public_workout_id)
+  {
+    $found = SavedWorkout::where('user_id', $user_id)
+      ->where('public_workout_id', $public_workout_id)
+      ->get();
+
+    if ($found->isEmpty()) {
+      return new PublicWorkoutValidation(
+        ValidationStatus::Success,
+      );
+    }
+
+    return new PublicWorkoutValidation(
+      ValidationStatus::Failed,
+      'Duplicated saved workout.'
     );
   }
 }
