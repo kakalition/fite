@@ -7,5 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class PublicWorkout extends Model
 {
-    use HasFactory;
+  use HasFactory;
+
+  protected $fillable = ['author_id', 'saved_workout_id'];
 }

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ExerciseController;
 use App\Http\Controllers\HistoryController;
+use App\Http\Controllers\PublicWorkoutController;
 use App\Http\Controllers\SavedWorkoutController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -23,6 +24,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::apiResources([
   'exercises' => ExerciseController::class,
+  'public-workouts' => PublicWorkoutController::class,
   'users/{user}/saved-workouts' => SavedWorkoutController::class,
 ]);
 

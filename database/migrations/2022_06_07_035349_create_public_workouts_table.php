@@ -14,9 +14,11 @@ return new class extends Migration
         ->references('id')
         ->on('users')
         ->cascadeOnDelete();
-      $table->string('title');
-      $table->json('exercises');
-      $table->integer('total_saved');
+      $table->foreignId('saved_workout_id')
+        ->references('id')
+        ->on('saved_workouts')
+        ->cascadeOnDelete();
+      $table->integer('total_saved')->default(0);
       $table->timestamps();
     });
   }
