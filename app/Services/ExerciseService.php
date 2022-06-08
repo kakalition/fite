@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Exercise;
 use App\Validators\ExerciseValidator;
+use App\Validators\Validation\ValidationStatus;
 use Illuminate\Http\Request;
 
 class ExerciseService
@@ -24,10 +25,18 @@ class ExerciseService
     return $exercise;
   }
 
-  public function create_exercise(Request $request): ServiceResult
+  public function create_exercise(Request $request, $user_id): ServiceResult
   {
     $title = $request->input('title');
     $type = $request->input('type');
+
+    $validation = $this
+      ->validator
+      ->validate_duplication($user_id, $title, $type);
+
+    if ($validation->status == ValidationStatus::Failed) {
+      return new ServiceResult(ServiceStatus::Failed, $validation->message);
+    }
 
     $exercise = Exercise::create([
       'title' => $title,
@@ -43,6 +52,14 @@ class ExerciseService
 
     $title = $request->input('title') ?? $exercise->title;
     $type = $request->input('type') ?? $exercise->type;
+
+    $validation = $this
+      ->validator
+      ->validate_duplication($user_id, $title, $type);
+
+    if ($validation->status == ValidationStatus::Failed) {
+      return new ServiceResult(ServiceStatus::Failed, $validation->message);
+    }
 
     $exercise->update([
       'title' => $title,
