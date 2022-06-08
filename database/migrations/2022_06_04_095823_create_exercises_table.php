@@ -15,6 +15,10 @@ return new class extends Migration
   {
     Schema::create('exercises', function (Blueprint $table) {
       $table->id();
+      $table->foreignId('user_id')
+        ->references('id')
+        ->on('users')
+        ->cascadeOnDelete();
       $table->string('title');
       $table->integer('type');
       $table->timestamps();
