@@ -2,7 +2,7 @@
 
 namespace App\Validators\Validation;
 
-class PublicWorkoutValidation
+class RequestValidation
 {
   public $status = null;
   public $message = null;
