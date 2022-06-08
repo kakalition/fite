@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Resources\ExerciseResource;
 use App\Models\Exercise;
 use App\Services\ExerciseService;
-use App\Services\ServiceResult;
 use App\Services\ServiceStatus;
 use Illuminate\Http\Request;
 
