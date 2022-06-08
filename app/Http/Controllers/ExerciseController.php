@@ -8,26 +8,6 @@ use Illuminate\Http\Request;
 
 class ExerciseController extends Controller
 {
-  private function exercise_constraints_checker($type, $reps, $weights_in_kg, $durations_in_sec)
-  {
-    if ($type === 0 && $reps === null) {
-      return response('Bodyweight training should include repetitions.', 400);
-    }
-
-    if ($type === 1 && ($reps === null || $weights_in_kg === null)) {
-      return response('Weight training should include repetitions and weights.', 400);
-    }
-
-    if ($type === 2 && $durations_in_sec === null) {
-      return response('Interval training should include durations.', 400);
-    }
-
-    if ($type < 0 || $type > 2) {
-      return response('Exercise type not recognized.', 400);
-    }
-
-    return null;
-  }
 
   public function index()
   {
@@ -35,9 +15,6 @@ class ExerciseController extends Controller
     return response($exercises);
   }
 
-  // Type 0: Bodyweight
-  // Type 1: Weight Training
-  // Type 2: Interval
   public function store(Request $request)
   {
     $title = $request->input('title');
@@ -60,27 +37,10 @@ class ExerciseController extends Controller
   {
     $title = $request->input('title') ?? $exercise;
     $type = $request->input('type') ?? $exercise;
-    $reps = $type == 0 || $type == 1
-      ? $request->input('reps') ?? $exercise->reps
-      : null;
-    $weights_in_kg = $type == 1
-      ? $request->input('weights_in_kg') ?? $exercise->weights_in_kg
-      : null;
-    $durations_in_sec = $type == 2
-      ? $request->input('durations_in_sec') ?? $exercise->duration_in_sec
-      : null;
-
-    $constraints_violation = $this->exercise_constraints_checker($type, $reps, $weights_in_kg, $durations_in_sec);
-    if ($constraints_violation != null) {
-      return $constraints_violation;
-    }
 
     $exercise->update([
       'title' => $title,
       'type' => $type,
-      'reps' => $reps,
-      'weights_in_kg' => $weights_in_kg,
-      'durations_in_sec' => $durations_in_sec,
     ]);
 
     return response($exercise->toJson());
