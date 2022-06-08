@@ -24,11 +24,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::apiResources([
   'exercises' => ExerciseController::class,
-  'public-workouts' => PublicWorkoutController::class,
   'users/{user}/saved-workouts' => SavedWorkoutController::class,
 ]);
 
 Route::apiResource('users/{user}/histories', HistoryController::class)
+  ->except('update');
+
+Route::apiResource('public-workouts', PublicWorkoutController::class)
   ->except('update');
 
 Route::post('users/{user}/public-workouts/{public_workout}', [PublicWorkoutController::class, 'save_to_user']);

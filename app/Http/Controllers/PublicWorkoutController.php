@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\PublicWorkoutResource;
 use App\Models\PublicWorkout;
 use App\Services\PublicWorkoutService;
 use App\Services\ServiceStatus;
@@ -22,7 +23,7 @@ class PublicWorkoutController extends Controller
       ->service
       ->get_public_workouts();
 
-    return response($public_workouts);
+    return response(PublicWorkoutResource::collection($public_workouts), 201);
   }
 
   public function store(Request $request)
@@ -38,19 +39,18 @@ class PublicWorkoutController extends Controller
     return response($public_workout->data, 201);
   }
 
-  public function show(PublicWorkout $publicWorkout)
+  public function show(PublicWorkout $public_workout)
   {
-    //
+    return response($public_workout);
   }
 
-  public function update(Request $request, PublicWorkout $publicWorkout)
+  public function destroy($user_id, $public_workout_id)
   {
-    //
-  }
+    $this
+      ->service
+      ->delete_public_workout($user_id, $public_workout_id);
 
-  public function destroy(PublicWorkout $publicWorkout)
-  {
-    //
+    return response('', 204);
   }
 
   public function save_to_user($user_id, $public_workout_id)

@@ -68,4 +68,13 @@ class PublicWorkoutService
 
     return new ServiceResult(ServiceStatus::Success, $saved_workout);
   }
+
+  public function delete_public_workout($user_id, $public_workout_id)
+  {
+    PublicWorkout::where('user_id', $user_id)
+      ->where('public_workout_id', $public_workout_id)
+      ->delete();
+
+    return new ServiceResult(ServiceStatus::Success, '');
+  }
 }

@@ -2,18 +2,18 @@
 
 namespace App\Http\Resources;
 
+use App\Helpers\DateParser;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class PublicWorkoutResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
-     */
-    public function toArray($request)
-    {
-        return parent::toArray($request);
-    }
+  public function toArray($request)
+  {
+    return [
+      'id' => $this->id,
+      'author_id' => $this->author_id,
+      'saved_workout_id' => $this->saved_workout_id,
+      'created_at' => DateParser::parse($this->created_at, 'Asia/Jakarta')
+    ];
+  }
 }
