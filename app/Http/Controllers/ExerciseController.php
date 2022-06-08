@@ -4,10 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\ExerciseResource;
 use App\Models\Exercise;
+use App\Services\ExerciseService;
 use Illuminate\Http\Request;
 
 class ExerciseController extends Controller
 {
+
+  protected $service;
+
+  public function __construct(ExerciseService $service)
+  {
+    $this->service = $service;
+  }
 
   public function index()
   {
@@ -17,15 +25,11 @@ class ExerciseController extends Controller
 
   public function store(Request $request)
   {
-    $title = $request->input('title');
-    $type = $request->input('type');
+    $result = $this
+      ->service
+      ->create_exercise($request);
 
-    $model = Exercise::create([
-      'title' => $title,
-      'type' => $type,
-    ]);
-
-    return response($model->toJson(), 201);
+    return response(new ExerciseResource($result->data), 201);
   }
 
   public function show(Exercise $exercise)
@@ -33,22 +37,21 @@ class ExerciseController extends Controller
     return new ExerciseResource($exercise);
   }
 
-  public function update(Request $request, Exercise $exercise)
+  public function update(Request $request, $user_id, $exercise_id)
   {
-    $title = $request->input('title') ?? $exercise;
-    $type = $request->input('type') ?? $exercise;
+    $result = $this
+      ->service
+      ->update_exercise($request, $user_id, $exercise_id);
 
-    $exercise->update([
-      'title' => $title,
-      'type' => $type,
-    ]);
-
-    return response($exercise->toJson());
+    return response(new ExerciseResource($result->data));
   }
 
-  public function destroy(Exercise $exercise)
+  public function destroy($user_id, $exercise_id)
   {
-    $exercise->delete();
+    $this
+      ->service
+      ->delete_exercise($user_id, $exercise_id);
+
     return response('', 204);
   }
 }

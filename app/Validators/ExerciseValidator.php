@@ -2,6 +2,6 @@
 
 namespace App\Validators;
 
-class ExeriseValidator
+class ExerciseValidator
 {
 }
